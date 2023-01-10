@@ -19,5 +19,6 @@ urlpatterns = [
     path('verVideos',views.verVideos,name='verVideos'),
     path('comandoInfo',views.comandoInfo,name='comandoInfo'),
     path('iniciarInspeccion',views.iniciarInspeccion,name='iniciarInspeccion'),
-    path('capturarFotoInspeccion',views.capturarFotoInspeccion,name='capturarFotoInspeccion')
+    path('capturarFotoInspeccion',views.capturarFotoInspeccion,name='capturarFotoInspeccion'),
+    path('fotosInspeccionEspecifico/<str:ind>',views.fotosInspeccionEspecifico,name='fotosInspeccionEspecifico')
 ]

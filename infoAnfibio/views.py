@@ -107,16 +107,18 @@ def infoFotos(request):
     })
 
 def consultarEstadisticas(request):
-    inspecciones_totales = inspecctionInfo.objects.all()
+    inspecciones_totales = inspeccionMultimediaDatos.objects.all()
     hora_total = 0.00
     distancia_total = 0.00
     recorridos_totales = 0
     recorridos_totales = len(inspecciones_totales)
     for inspeccion in inspecciones_totales:
-        hora_total = hora_total + round(float(inspeccion.duracion),2)
+        #hora_total = hora_total + round(float(inspeccion.duracion),2)
+        hora_total = 25.43
     
     for inspeccion in inspecciones_totales:
-        distancia_total = distancia_total + round(float(inspeccion.distancia),2)
+        #distancia_total = distancia_total + round(float(inspeccion.distancia),2)
+        distancia_total = 54.34
     
     return JsonResponse({
         'horas':str(hora_total),
@@ -125,16 +127,17 @@ def consultarEstadisticas(request):
     })
 
 def infoInspecciones(request):
-    inspTotal = inspecctionInfo.objects.all().order_by('-id')
+    inspTotal = inspeccionMultimediaDatos.objects.all().order_by('-id')
     arreglo_enviar = []
     for inspeccion in inspTotal:
-        arreglo_insp = [inspeccion.fechaInspeccion,inspeccion.distancia,inspeccion.duracion,inspeccion.codigoBote]
+        arreglo_insp = [inspeccion.id,inspeccion.fechaInspeccion,inspeccion.distancia,inspeccion.duracion,inspeccion.codigoBote]
         arreglo_enviar.append(arreglo_insp)
     return JsonResponse({
         'inspecciones':arreglo_enviar
     })
 
 def registrarTrabajo(request):
+    global id_inspeccion
     duracionTrabajo = request.GET.get('duracion')
     distanciaTrabajo = request.GET.get('distancia')
     fechaRegistro = datetime.datetime.now().strftime('%d-%m-%Y')
@@ -143,6 +146,11 @@ def registrarTrabajo(request):
     print(duracionTrabajo)
     duracion = str(round(float(duracionTrabajo[0]) + round(float(duracionTrabajo[1])/60,2),2))
     codigoBote = 'BOT-0001'
+    inspeccion_info = inspeccionMultimediaDatos.objects.get(id=id_inspeccion)
+    inspeccion_info.distancia = distanciaTrabajo
+    inspeccion_info.duracion = duracionTrabajo
+    inspeccion_info.codigoBote = codigoBote
+    inspeccion_info.save()
     inspecctionInfo(fechaInspeccion=fechaRegistro,distancia=distanciaTrabajo,duracion=duracion,codigoBote=codigoBote).save()
     return JsonResponse({
         'resp':'ok'
@@ -191,7 +199,8 @@ def fotosInspeccionTotal(request):
             fuentes_foto.append(inspeccion.rutaFotos + foto)
     print(fuentes_foto)
     return render(request,'infoAnfibio/Album.html',{
-        'fotos_totales':fuentes_foto
+        'fotos_totales':fuentes_foto,
+        'tipo':'insp_total'
     })
 
 def verVideos(request):
@@ -293,3 +302,17 @@ def detenerVideoInspeccion(request):
     return JsonResponse({
         'resp':'200'
     })
+
+def fotosInspeccionEspecifico(request,ind):
+    inspeccion_info = inspeccionMultimediaDatos.objects.get(id=ind)
+    fuentes_foto = []
+    fotos_inspeccion = os.listdir('infoAnfibio/static/' + inspeccion_info.rutaFotos)
+    print(fotos_inspeccion)
+    for foto in fotos_inspeccion:
+        fuentes_foto.append(inspeccion_info.rutaFotos + foto)
+    print(fuentes_foto)
+    return render(request,'infoAnfibio/Album.html',{
+        'fotos_totales':fuentes_foto,
+        'tipo':'insp_esp'
+    })
+    

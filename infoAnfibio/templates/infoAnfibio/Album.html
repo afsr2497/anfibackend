@@ -22,9 +22,16 @@
                     <img class="welcome_logotumi_img_2" src="{% static 'Img/separator.png' %}" alt="">
                     <p class="welcome_header_text">Galería</p> 
                 </div>
+                {% if tipo == 'insp_total' %}
                 <a href="http://localhost:3000/Main" style="text-decoration: none">
                     <img class="work_back_img"  src="{% static 'Img/arrow_left.png' %}" alt="">
                 </a>
+                {% endif %}
+                {% if tipo == 'insp_esp' %}
+                <a href="http://localhost:3000/MasEstadisticas" style="text-decoration: none">
+                    <img class="work_back_img"  src="{% static 'Img/arrow_left.png' %}" alt="">
+                </a>
+                {% endif %}
                 <img class="arrow_img_left"  src="{% static 'Img/arrow_left2.png' %}" alt="" style="visibility: hidden"/>
                 <img class="arrow_img_right"  src="{% static 'Img/arrow_right.png' %}" alt=""  style="visibility: hidden"/>
                 <div class="gallery_section">
