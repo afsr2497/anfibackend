@@ -315,4 +315,39 @@ def fotosInspeccionEspecifico(request,ind):
         'fotos_totales':fuentes_foto,
         'tipo':'insp_esp'
     })
-    
+
+def encendeLucesFL(request):
+    print('Se recepciono el comando para encender luces')
+    return JsonResponse({
+        'resp':'ok'
+    })
+
+def apagarLucesFL(request):
+    print('Se recepciono el comando para apagar luces')
+    return JsonResponse({
+        'reps':'ok'
+    })
+
+def encenderLucesBL(request):
+    print('Se encenderan las luces traseras')
+    return JsonResponse({
+        'resp':'ok'
+    })
+
+def apagarLucesBL(request):
+    print('Se apagaran las luces traseras')
+    return JsonResponse({
+        'resp':'ok'
+    })
+
+def encenderLucesLV(request):
+    print('Se encendera la hidrolavadora')
+    return JsonResponse({
+        'resp':'ok'
+    })
+
+def apagarLucesLV(request):
+    print('Se apagara LA HIDROLAVora')
+    return JsonResponse({
+        'resp':'ok'
+    })

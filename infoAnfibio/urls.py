@@ -20,5 +20,11 @@ urlpatterns = [
     path('comandoInfo',views.comandoInfo,name='comandoInfo'),
     path('iniciarInspeccion',views.iniciarInspeccion,name='iniciarInspeccion'),
     path('capturarFotoInspeccion',views.capturarFotoInspeccion,name='capturarFotoInspeccion'),
-    path('fotosInspeccionEspecifico/<str:ind>',views.fotosInspeccionEspecifico,name='fotosInspeccionEspecifico')
+    path('fotosInspeccionEspecifico/<str:ind>',views.fotosInspeccionEspecifico,name='fotosInspeccionEspecifico'),
+    path('encenderLucesFL',views.encendeLucesFL,name='encenderLucesFL'),
+    path('apagarLucesFL',views.apagarLucesFL,name='apagarLucesFL'),
+    path('encenderLucesBL',views.encenderLucesBL,name='encenderLucesBL'),
+    path('apagarLucesBL',views.apagarLucesBL,name='apagarLucesBL'),
+    path('encenderLucesLV',views.encenderLucesLV,name='encenderLucesLV'),
+    path('apagarLucesLV',views.apagarLucesLV,name='apagarLucesLV'),
 ]
