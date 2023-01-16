@@ -27,4 +27,6 @@ urlpatterns = [
     path('apagarLucesBL',views.apagarLucesBL,name='apagarLucesBL'),
     path('encenderLucesLV',views.encenderLucesLV,name='encenderLucesLV'),
     path('apagarLucesLV',views.apagarLucesLV,name='apagarLucesLV'),
+    path('grabar_video_inspeccion_anfibio',views.grabar_video_inspeccion_anfibio,name='grabar_video_inspeccion_anfibio'),
+    path('detener_video_inspeccion_anfibio',views.detener_video_inspeccion_anfibio,name='detener_video_inspeccion_anfibio'),
 ]

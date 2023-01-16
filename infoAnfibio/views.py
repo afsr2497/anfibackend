@@ -5,6 +5,8 @@ import datetime
 import cv2
 import os
 import serial
+import sys
+import subprocess as sp
 
 path_fotos_inspeccion = ''
 path_videos_inspeccion = ''
@@ -13,6 +15,7 @@ id_inspeccion = '0'
 counter_fotos = '0'
 counter_videos = '0'
 frames_videos = '0'
+app_video = None
 #VIDEO_GRABACION es un flag que indica que el video se esta grabando
 
 #captureVideoFoto = cv2.VideoCapture("http://localhost:8080/?action=stream")
@@ -257,7 +260,6 @@ def iniciarInspeccion(request):
 def capturarFotoInspeccion(request):
     global path_fotos_inspeccion
     global counter_fotos
-    global captureVideoFoto
     nombre_foto = 'img-' + str(counter_fotos)
     counter_fotos = str(int(counter_fotos) + 1)
     capturaFotos = cv2.VideoCapture("http://localhost:8080/?action=stream")
@@ -273,26 +275,6 @@ def capturarFotoInspeccion(request):
             'resp':'404'
         })
 
-def ejemploProcesos(request):
-    return HttpResponse('Hola')
-
-
-def grabarVideoInspeccion():
-    global path_videos_inspeccion
-    global video_grabacion
-    global counter_videos
-    global frames_videos
-    video_grabacion = '1'
-    videoRecorder = cv2.VideoCapture("http://localhost:8080/?action=stream")
-    ruta_video = path_videos_inspeccion + 'video' + str(counter_videos) + '/'
-    counter_videos = str(int(counter_videos) + 1)
-    os.mkdir(ruta_video)
-    while video_grabacion == '1':
-        ret,cv_img = videoRecorder.read()
-        if ret:
-            cv2.imwrite(ruta_video + str(frames_videos) + ".png",cv_img)
-            frames_videos = str(int(frames_videos) + 1)
-    videoRecorder.release()
 
 def detenerVideoInspeccion(request):
     global video_grabacion
@@ -351,3 +333,27 @@ def apagarLucesLV(request):
     return JsonResponse({
         'resp':'ok'
     })
+
+def grabar_video_inspeccion_anfibio(request):
+    global path_videos_inspeccion
+    global counter_videos
+    global app_video
+    nombre_video = 'vid-' + str(counter_videos)
+    counter_videos = str(int(counter_videos) + 1)
+    print(f'{path_videos_inspeccion}{nombre_video}.mp4')
+    app_video = sp.Popen(['python3','video_cliente.py',f'{path_videos_inspeccion}{nombre_video}.mp4'])
+    return JsonResponse({
+        'resp':'200',
+    })
+
+def detener_video_inspeccion_anfibio(request):
+    global app_video
+    if app_video is not None:
+        app_video.terminate()
+        app_video = None
+    else:
+        pass
+    return JsonResponse({
+        'resp':'200',
+    })
+
