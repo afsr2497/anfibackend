@@ -34,7 +34,12 @@
                     <p class="welcome_header_text">Galería</p> 
                 </div>
                 {% if tipo == 'insp_total' %}
-                <a href="http://localhost:3000/Main" style="text-decoration: none">
+                <a href="{% url 'infoAnfibio:videosInspeccionTotal' %}" style="text-decoration: none">
+                    <img class="work_back_img"  src="{% static 'Img/arrow_left.png' %}" alt="">
+                </a>
+                {% endif %}
+                {% if tipo == 'insp_esp' %}
+                <a href="{% url 'infoAnfibio:videosInspeccionEspecifico' id_insp %}" style="text-decoration: none">
                     <img class="work_back_img"  src="{% static 'Img/arrow_left.png' %}" alt="">
                 </a>
                 {% endif %}
@@ -46,7 +51,7 @@
                     </div>
                     <div class="video_css">
                         <div id="vWrap">
-                            <video id="vVid" src="{% static 'videos/INSP-VIDEOS-0014/vid-1.mp4' %}" style="width:400 px;"></video>
+                            <video id="vVid" src="{% static video %}" style="width:400 px;"></video>
                             <button id="vPlay" disabled><span id="vPlayIco" class="material-icons">play_arrow</span></button>
                             <div id="vCron"><span id="vNow"></span> / <span id="vTime"></span></div>
                             <input id="vSeek" type="range" min="0" value="0" step="1" disabled>

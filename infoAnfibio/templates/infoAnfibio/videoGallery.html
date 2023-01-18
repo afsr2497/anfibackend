@@ -41,15 +41,34 @@
                             <a href="{% url 'infoAnfibio:fotosInspeccionTotal' %}" style="text-decoration: none;"><button class="gallery_button button_gallery_enable">Fotos</button></a>
                         </div>
                     {% endif %}
+                    {% if tipo == 'insp_esp' %}
+                        <div class="gallery_container_buttons">
+                            <a href="{% url 'infoAnfibio:videosInspeccionEspecifico' id_insp %}" style="text-decoration: none;"><button class="gallery_button button_gallery_disable">Videos</button></a>
+                            <a href="{% url 'infoAnfibio:fotosInspeccionEspecifico' id_insp %}" style="text-decoration: none;"><button class="gallery_button button_gallery_enable">Fotos</button></a>
+                        </div>
+                    {% endif %}
+                    {% if tipo == 'insp_total' %}
                     <div class="gallery_boat_row">
                         {%  for video in videos_totales %}
                             <div class="gallery_boat">
-                                <a href="{% url 'infoAnfibio:videoPlayer' %}"><img src="{% static 'Img/videoPlay.jpg' %}" style="display:block; max-width:200px; max-height:200px; width:auto;height:auto;"></a>
-                                <h6 style="color: white;">{{ video.1 }}</h6>
+                                <a href="{% url 'infoAnfibio:videoPlayer' video %}"><img src="{% static 'Img/videoPlay.jpg' %}" style="display:block; max-width:200px; max-height:200px; width:auto;height:auto;"></a>
+                                <h6 style="color: white;">{{ video }}</h6>
                                 <!--<img src="{% static foto %}" style="display:block; max-width:200px; max-height:200px; width:auto;height:auto;">-->
                             </div>
                         {% endfor %}
                     </div>
+                    {% endif %}
+                    {% if tipo == 'insp_esp' %}
+                    <div class="gallery_boat_row">
+                        {%  for video in videos_totales %}
+                            <div class="gallery_boat">
+                                <a href="{% url 'infoAnfibio:videoEspecifico' video id_insp %}"><img src="{% static 'Img/videoPlay.jpg' %}" style="display:block; max-width:200px; max-height:200px; width:auto;height:auto;"></a>
+                                <h6 style="color: white;">{{ video }}</h6>
+                                <!--<img src="{% static foto %}" style="display:block; max-width:200px; max-height:200px; width:auto;height:auto;">-->
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

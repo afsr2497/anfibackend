@@ -194,16 +194,30 @@ def capturarFoto(request):
 
 def fotosInspeccionTotal(request):
     fuentes_foto = []
+    counter = 1
     inspecciones_totales = inspeccionMultimediaDatos.objects.all()
     for inspeccion in inspecciones_totales:
         fotos_inspeccion = os.listdir('infoAnfibio/static/' + inspeccion.rutaFotos)
         print(fotos_inspeccion)
         for foto in fotos_inspeccion:
-            fuentes_foto.append([inspeccion.rutaFotos + foto,inspeccion.codigoInspeccion + '-' +foto])
+            fuentes_foto.append([inspeccion.rutaFotos + foto,inspeccion.codigoInspeccion + '-' +foto,f'foto{counter}'])
+            counter = counter + 1
     print(fuentes_foto)
     return render(request,'infoAnfibio/Album.html',{
         'fotos_totales':fuentes_foto,
         'tipo':'insp_total'
+    })
+
+def videosInpeccionEspecifico(request,ind):
+    fuentes_video = []
+    inspeccion_info = inspeccionMultimediaDatos.objects.get(id=ind)
+    videos_inspeccion = os.listdir('infoAnfibio/static/' + inspeccion_info.rutaVideo)
+    for video in videos_inspeccion:
+        fuentes_video.append(inspeccion_info.codigoInspeccion + ':' + video)
+    return render(request,'infoAnfibio/videoGallery.html',{
+        'tipo':'insp_esp',
+        'videos_totales':fuentes_video,
+        'id_insp':str(ind)
     })
 
 def videosInspeccionTotal(request):
@@ -212,14 +226,36 @@ def videosInspeccionTotal(request):
     for inspeccion in inspecciones_totales:
         videos_inspeccion = os.listdir('infoAnfibio/static/' + inspeccion.rutaVideo)
         for video in videos_inspeccion:
-            fuentes_video.append([inspeccion.rutaVideo + video,inspeccion.codigoInspeccion + '-' +video])
+            fuentes_video.append(inspeccion.codigoInspeccion + ':' +video)
     return render(request,'infoAnfibio/videoGallery.html',{
         'videos_totales':fuentes_video,
         'tipo':'insp_total'
     })
 
-def videoPlayer(request):
-    return render(request,'infoAnfibio/videoPlayer.html')
+def videoPlayer(request,ind):
+    print(ind)
+    codigoInspeccion = ind.split(':')[0]
+    nombreVideo = ind.split(':')[1]
+    rutaVideo = inspeccionMultimediaDatos.objects.get(codigoInspeccion=codigoInspeccion).rutaVideo + nombreVideo
+    return render(request,'infoAnfibio/videoPlayer.html',{
+        'video':str(rutaVideo),
+        'tipo':'insp_total',
+        'id_insp':str(ind),
+    })
+
+def videoEspecifico(request,ind,info):
+    codigoInspeccion = ind.split(':')[0]
+    nombreVideo = ind.split(':')[1]
+    id_insp = info
+    rutaVideo = inspeccionMultimediaDatos.objects.get(codigoInspeccion=codigoInspeccion).rutaVideo + nombreVideo
+    print(codigoInspeccion)
+    print(nombreVideo)
+    print(id_insp)
+    return render(request,'infoAnfibio/videoPlayer.html',{
+        'video':str(rutaVideo),
+        'tipo':'insp_esp',
+        'id_insp':str(info)
+    })
 
 def verVideos(request):
     return render(request,'infoAnfibio/video.html')
@@ -239,13 +275,18 @@ def iniciarInspeccion(request):
     global path_fotos_inspeccion
     global path_videos_inspeccion
     global id_inspeccion
+    nueva_insp = 0
     try:
+        nueva_insp = 1
         ultima_inspeccion = inspeccionMultimediaDatos.objects.latest('id')
         codigo_identificador = str(int(ultima_inspeccion.id) + 1)
         id_inspeccion = str(int(ultima_inspeccion.id) + 1)
     except:
-        id_inspeccion = '1'
-        codigo_identificador = '1'
+        nueva_insp = 0
+        inspeccionMultimediaDatos().save()
+        ult_inspeccion = inspeccionMultimediaDatos.objects.latest('id')
+        id_inspeccion = str(ult_inspeccion.id)
+        codigo_identificador = str(ult_inspeccion.id)
     #CodigoInspeccion
     while(len(codigo_identificador)<4):
         codigo_identificador = '0' + codigo_identificador
@@ -266,7 +307,15 @@ def iniciarInspeccion(request):
     os.mkdir('./infoAnfibio/static/' + ruta_videos)
     path_fotos_inspeccion = './infoAnfibio/static/' + ruta_fotos
     path_videos_inspeccion = './infoAnfibio/static/' + ruta_videos
-    inspeccionMultimediaDatos(codigoInspeccion=codigo_identificador,rutaFotos=ruta_fotos,rutaVideo=ruta_videos,codigoBote=codigo_bote).save()
+    if nueva_insp  == 1:
+        inspeccionMultimediaDatos(codigoInspeccion=codigo_identificador,rutaFotos=ruta_fotos,rutaVideo=ruta_videos,codigoBote=codigo_bote).save()
+    else:
+        ult_inspeccion.codigoInspeccion = codigo_identificador
+        ult_inspeccion.rutaFotos=ruta_fotos
+        ult_inspeccion.rutaVideo=ruta_videos
+        ult_inspeccion.codigoBote=codigo_bote
+        ult_inspeccion.save()
+        
 
     return JsonResponse({
         'resp':'200'
@@ -277,7 +326,7 @@ def capturarFotoInspeccion(request):
     global counter_fotos
     nombre_foto = 'img-' + str(counter_fotos)
     counter_fotos = str(int(counter_fotos) + 1)
-    capturaFotos = cv2.VideoCapture("http://localhost:8080/?action=stream")
+    capturaFotos = cv2.VideoCapture("http://192.168.137.80:8080/?action=stream")
     ret, cv_img = capturaFotos.read()
     if ret:
         cv2.imwrite(path_fotos_inspeccion + str(nombre_foto) + ".jpeg",cv_img)
@@ -303,14 +352,17 @@ def detenerVideoInspeccion(request):
 def fotosInspeccionEspecifico(request,ind):
     inspeccion_info = inspeccionMultimediaDatos.objects.get(id=ind)
     fuentes_foto = []
+    counter = 1
     fotos_inspeccion = os.listdir('infoAnfibio/static/' + inspeccion_info.rutaFotos)
     print(fotos_inspeccion)
     for foto in fotos_inspeccion:
-        fuentes_foto.append(inspeccion_info.rutaFotos + foto)
+        fuentes_foto.append([inspeccion_info.rutaFotos + foto,inspeccion_info.codigoInspeccion + '-' +foto,f'foto{counter}'])
+        counter = counter + 1
     print(fuentes_foto)
     return render(request,'infoAnfibio/Album.html',{
         'fotos_totales':fuentes_foto,
-        'tipo':'insp_esp'
+        'tipo':'insp_esp',
+        'id_insp':str(ind),
     })
 
 def encendeLucesFL(request):

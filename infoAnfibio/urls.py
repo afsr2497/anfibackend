@@ -30,5 +30,7 @@ urlpatterns = [
     path('apagarLucesLV',views.apagarLucesLV,name='apagarLucesLV'),
     path('grabar_video_inspeccion_anfibio',views.grabar_video_inspeccion_anfibio,name='grabar_video_inspeccion_anfibio'),
     path('detener_video_inspeccion_anfibio',views.detener_video_inspeccion_anfibio,name='detener_video_inspeccion_anfibio'),
-    path('videoPlayer',views.videoPlayer,name='videoPlayer'),
+    path('videoPlayer/<str:ind>',views.videoPlayer,name='videoPlayer'),
+    path('videosInspeccionEspecifico/<str:ind>',views.videosInpeccionEspecifico,name='videosInspeccionEspecifico'),
+    path('videoEspecifico/<str:ind>/<str:info>',views.videoEspecifico,name='videoEspecifico')
 ]
