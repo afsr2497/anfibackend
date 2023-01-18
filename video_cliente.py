@@ -10,7 +10,7 @@ import signal
 import sys
 import cv2
 
-capturador = cv2.VideoCapture(0)
+capturador = cv2.VideoCapture('/dev/video0')
 writer = cv2.VideoWriter(sys.argv[1],cv2.VideoWriter_fourcc('m','p','4','v'),30,(1280,720))
 
 def terminar_programa(signum, frame):

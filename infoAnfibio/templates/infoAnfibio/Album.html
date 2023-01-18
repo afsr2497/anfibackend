@@ -35,14 +35,17 @@
                 <img class="arrow_img_left"  src="{% static 'Img/arrow_left2.png' %}" alt="" style="visibility: hidden"/>
                 <img class="arrow_img_right"  src="{% static 'Img/arrow_right.png' %}" alt=""  style="visibility: hidden"/>
                 <div class="gallery_section">
-                    <div class="gallery_container_buttons">
-                        <a href="#" style="text-decoration: none;"><button class="gallery_button button_gallery_disable">Videos</button></a>
-                        <button class="gallery_button button_gallery_enable"> Fotos</button>
-                    </div>
+                    {% if tipo == 'insp_total' %}
+                        <div class="gallery_container_buttons">
+                            <a href="{% url 'infoAnfibio:videosInspeccionTotal' %}" style="text-decoration: none;"><button class="gallery_button button_gallery_enable">Videos</button></a>
+                            <a href="{% url 'infoAnfibio:fotosInspeccionTotal' %}" style="text-decoration: none;"><button class="gallery_button button_gallery_disable">Fotos</button></a>
+                        </div>
+                    {% endif %}
                     <div class="gallery_boat_row">
                         {%  for foto in fotos_totales %}
                             <div class="gallery_boat">
-                                <img src="{% static foto %}" style="display:block; max-width:200px; max-height:200px; width:auto;height:auto;">
+                                <img src="{% static foto.0 %}" style="display:block; max-width:200px; max-height:200px; width:auto;height:auto;">
+                                <h6 style="color: white;">{{ foto.1 }}</h6>
                             </div>
                         {% endfor %}
                     </div>

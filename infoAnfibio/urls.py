@@ -16,6 +16,7 @@ urlpatterns = [
     path('foto/<str:ind>',views.foto,name='foto'),
     path('capturarFoto',views.capturarFoto,name='capturarFoto'),
     path('fotosInspeccionTotal',views.fotosInspeccionTotal,name='fotosInspeccionTotal'),
+    path('videosInspeccionTotal',views.videosInspeccionTotal,name='videosInspeccionTotal'),
     path('verVideos',views.verVideos,name='verVideos'),
     path('comandoInfo',views.comandoInfo,name='comandoInfo'),
     path('iniciarInspeccion',views.iniciarInspeccion,name='iniciarInspeccion'),
@@ -29,4 +30,5 @@ urlpatterns = [
     path('apagarLucesLV',views.apagarLucesLV,name='apagarLucesLV'),
     path('grabar_video_inspeccion_anfibio',views.grabar_video_inspeccion_anfibio,name='grabar_video_inspeccion_anfibio'),
     path('detener_video_inspeccion_anfibio',views.detener_video_inspeccion_anfibio,name='detener_video_inspeccion_anfibio'),
+    path('videoPlayer',views.videoPlayer,name='videoPlayer'),
 ]

@@ -199,12 +199,27 @@ def fotosInspeccionTotal(request):
         fotos_inspeccion = os.listdir('infoAnfibio/static/' + inspeccion.rutaFotos)
         print(fotos_inspeccion)
         for foto in fotos_inspeccion:
-            fuentes_foto.append(inspeccion.rutaFotos + foto)
+            fuentes_foto.append([inspeccion.rutaFotos + foto,inspeccion.codigoInspeccion + '-' +foto])
     print(fuentes_foto)
     return render(request,'infoAnfibio/Album.html',{
         'fotos_totales':fuentes_foto,
         'tipo':'insp_total'
     })
+
+def videosInspeccionTotal(request):
+    fuentes_video = []
+    inspecciones_totales = inspeccionMultimediaDatos.objects.all()
+    for inspeccion in inspecciones_totales:
+        videos_inspeccion = os.listdir('infoAnfibio/static/' + inspeccion.rutaVideo)
+        for video in videos_inspeccion:
+            fuentes_video.append([inspeccion.rutaVideo + video,inspeccion.codigoInspeccion + '-' +video])
+    return render(request,'infoAnfibio/videoGallery.html',{
+        'videos_totales':fuentes_video,
+        'tipo':'insp_total'
+    })
+
+def videoPlayer(request):
+    return render(request,'infoAnfibio/videoPlayer.html')
 
 def verVideos(request):
     return render(request,'infoAnfibio/video.html')
